@@ -1,0 +1,162 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardiovascular Health Predictor</title>
+    <!-- This script pulls in Tailwind CSS for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- This links the Inter font for a modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="container mx-auto px-4 py-12">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-gray-800">Cardiovascular Health Predictor</h1>
+            <p class="text-lg text-gray-600 mt-2">Enter patient details to predict potential health conditions.</p>
+            <p class="text-sm text-red-600 mt-4 font-semibold">⚠️ Disclaimer: This tool is for informational purposes only and is not a substitute for professional medical advice.</p>
+        </header>
+
+        <main class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+            <!-- The form that the user fills out -->
+            <form id="prediction-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- Each input has a 'name' that MUST match the column names your model expects -->
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="Age">Age (years)</label>
+                    <input class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4" id="Age" name="Age" type="number" placeholder="e.g., 55" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="Gender">Gender</label>
+                    <select class="shadow-sm bg-white border rounded-lg w-full py-3 px-4" id="Gender" name="Gender" required>
+                        <option value="2">Female</option>
+                        <option value="1">Male</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="Height">Height (cm)</label>
+                    <input class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4" id="Height" name="Height" type="number" placeholder="e.g., 165" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="Weight">Weight (kg)</label>
+                    <input class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4" id="Weight" name="Weight" type="number" step="0.1" placeholder="e.g., 70.5" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="Systolic_BP">Systolic BP</label>
+                    <input class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4" id="Systolic_BP" name="Systolic_BP" type="number" placeholder="e.g., 120" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="Diastolic_BP">Diastolic BP</label>
+                    <input class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4" id="Diastolic_BP" name="Diastolic_BP" type="number" placeholder="e.g., 80" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="Cholesterol">Cholesterol</label>
+                    <select class="shadow-sm bg-white border rounded-lg w-full py-3 px-4" id="Cholesterol" name="Cholesterol" required>
+                        <option value="1">Normal</option>
+                        <option value="2">Above Normal</option>
+                        <option value="3">Well Above Normal</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="Glucose">Glucose</label>
+                    <select class="shadow-sm bg-white border rounded-lg w-full py-3 px-4" id="Glucose" name="Glucose" required>
+                        <option value="1">Normal</option>
+                        <option value="2">Above Normal</option>
+                        <option value="3">Well Above Normal</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="Smoking">Smoking</label>
+                    <select class="shadow-sm bg-white border rounded-lg w-full py-3 px-4" id="Smoking" name="Smoking" required>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="Alcohol">Alcohol Intake</label>
+                    <select class="shadow-sm bg-white border rounded-lg w-full py-3 px-4" id="Alcohol" name="Alcohol" required>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="Physical_Activity">Physical Activity</label>
+                    <select class="shadow-sm bg-white border rounded-lg w-full py-3 px-4" id="Physical_Activity" name="Physical_Activity" required>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="md:col-span-2 text-center mt-4">
+                    <button type="submit" id="submit-button" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg">
+                        Get Prediction
+                    </button>
+                </div>
+            </form>
+
+            <!-- This section is hidden at first and will show the result -->
+            <div id="results-section" class="mt-10 text-center hidden">
+                 <div id="loader" class="flex justify-center items-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                </div>
+                <div id="prediction-output" class="hidden">
+                    <h2 class="text-2xl font-bold text-gray-800">Prediction Result</h2>
+                    <p id="prediction-text" class="text-xl text-blue-700 font-semibold mt-2 bg-blue-50 p-4 rounded-lg"></p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- This JavaScript block handles all the interactivity -->
+    <script>
+        // Get references to the HTML elements we need to interact with
+        const form = document.getElementById('prediction-form');
+        const resultsSection = document.getElementById('results-section');
+        const predictionOutput = document.getElementById('prediction-output');
+        const predictionText = document.getElementById('prediction-text');
+        const loader = document.getElementById('loader');
+
+        // Listen for when the user clicks the 'submit' button on the form
+        form.addEventListener('submit', async function(event) {
+            // Stop the browser from reloading the page (the default form behavior)
+            event.preventDefault();
+
+            // Show the loader and hide any old results
+            resultsSection.classList.remove('hidden');
+            loader.classList.remove('hidden');
+            predictionOutput.classList.add('hidden');
+
+            // Gather all the data from the form into an object
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            // Use the 'fetch' API to send the data to our Flask backend
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                // Convert the data object to a JSON string
+                body: JSON.stringify(data)
+            });
+
+            // Get the JSON response back from the server
+            const result = await response.json();
+
+            // Hide the loader
+            loader.classList.add('hidden');
+
+            // Update the text on the page with the prediction and show the result
+            predictionText.textContent = result.prediction;
+            predictionOutput.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>

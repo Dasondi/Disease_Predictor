@@ -1,0 +1,14 @@
+# Python virtual environment
+venv/
+
+# Large data files
+*.csv
+
+# Trained models
+*.pkl
+
+# macOS system files
+.DS_Store
+
+# Python cache
+__pycache__/
